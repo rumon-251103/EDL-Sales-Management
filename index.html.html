@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <h2 id="login-company-title" class="text-2xl font-bold text-slate-800 tracking-tight">Ethical Drugs Ltd. Login</h2>
-                <p class="text-xs text-slate-500">Sign in with your User ID and Password</p>
+                <p class="text-xs text-slate-500">Sign in with your User ID and Firebase password</p>
             </div>
 
             <!-- Login Form -->
@@ -128,7 +128,7 @@
                     </div>
                     <div>
                         <h1 id="header-company-title" class="font-bold text-lg leading-tight tracking-tight">Ethical Drugs Ltd.</h1>
-                        <p id="header-subtitle" class="text-xs text-slate-400">Delivery & DIC Admin System</p>
+                        <p id="header-subtitle" class="text-xs text-slate-400">Centralized Delivery & DIC Management System</p>
                     </div>
                 </div>
 
@@ -518,7 +518,7 @@
                 </div>
             </div>
 
-            <!-- ADMIN TAB 3: Delivery Personnel Setup (ID, Password & Assignments) -->
+            <!-- ADMIN TAB 3: Delivery Personnel Setup (Account, Zone, Team, Area & Assignments) -->
             <div id="admin-subtab-delivery-men-content" class="hidden space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     
@@ -526,7 +526,7 @@
                     <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm h-fit">
                         <h3 class="font-bold text-slate-800 text-sm mb-4 flex items-center space-x-2">
                             <i data-lucide="user-plus" class="w-4 h-4 text-sky-600"></i>
-                            <span>Create Delivery Person Account</span>
+                            <span>Create Delivery Person Account · Firebase</span>
                         </h3>
                         <form onsubmit="handleCreateDeliveryMan(event)" class="space-y-4">
                             <div>
@@ -542,9 +542,15 @@
                                 <input type="text" id="dm-create-userid" required placeholder="e.g. DM-04" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500">
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Set Login Password <span class="text-rose-500">*</span></label>
-                                <input type="password" id="dm-create-password" required placeholder="••••••••" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500">
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Login Email <span class="text-rose-500">*</span></label>
+                                <input type="email" id="dm-create-email" required placeholder="delivery@example.com" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500">
                             </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                <div><label class="block text-xs font-semibold text-slate-700 mb-1">Zone</label><select id="dm-create-zone" class="w-full border border-slate-300 rounded-lg px-2 py-2 text-xs"><option value="">Select Zone</option></select></div>
+                                <div><label class="block text-xs font-semibold text-slate-700 mb-1">Team</label><select id="dm-create-team" class="w-full border border-slate-300 rounded-lg px-2 py-2 text-xs"><option value="">Select Team</option></select></div>
+                                <div><label class="block text-xs font-semibold text-slate-700 mb-1">Area</label><select id="dm-create-area" class="w-full border border-slate-300 rounded-lg px-2 py-2 text-xs"><option value="">Select Area</option></select></div>
+                            </div>
+                            <p class="text-[10px] text-slate-500">Zone, Team and Area options are maintained in the MIO / TO Directory.</p>
                             <button type="submit" class="w-full py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs rounded-xl shadow transition">
                                 Create Delivery Account
                             </button>
@@ -568,9 +574,19 @@
                                 </button>
                             </div>
                         </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
+                            <select id="dm-zone-filter" onchange="renderDeliveryMenManagement()" class="bg-slate-50 border border-slate-300 text-xs rounded-lg px-3 py-2"><option value="">All Zones</option></select>
+                            <select id="dm-team-filter" onchange="renderDeliveryMenManagement()" class="bg-slate-50 border border-slate-300 text-xs rounded-lg px-3 py-2"><option value="">All Teams</option></select>
+                            <select id="dm-area-filter" onchange="renderDeliveryMenManagement()" class="bg-slate-50 border border-slate-300 text-xs rounded-lg px-3 py-2"><option value="">All Areas</option></select>
+                        </div>
                         <div class="flex items-center justify-between mb-3 text-[11px] text-slate-500">
                             <span id="dm-filter-result-count">0 Delivery Personnel</span>
-                            <span>Filter by name</span>
+                            <span>Filter by name, Zone, Team or Area</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
+                            <select id="assign-mio-zone-filter" onchange="renderDeliveryMenManagement()" class="bg-white border border-slate-300 text-xs rounded-lg px-3 py-2"><option value="">Assignment: All Zones</option></select>
+                            <select id="assign-mio-team-filter" onchange="renderDeliveryMenManagement()" class="bg-white border border-slate-300 text-xs rounded-lg px-3 py-2"><option value="">Assignment: All Teams</option></select>
+                            <select id="assign-mio-area-filter" onchange="renderDeliveryMenManagement()" class="bg-white border border-slate-300 text-xs rounded-lg px-3 py-2"><option value="">Assignment: All Areas</option></select>
                         </div>
                         <div id="delivery-men-card-list" class="space-y-4">
                             <!-- Injected by JS -->
@@ -641,6 +657,9 @@
                                         <th class="py-3 px-4">Name</th>
                                         <th class="py-3 px-4">Position / Designation</th>
                                         <th class="py-3 px-4">Territory</th>
+                                        <th class="py-3 px-4">Zone</th>
+                                        <th class="py-3 px-4">Team</th>
+                                        <th class="py-3 px-4">Area</th>
                                         <th class="py-3 px-4">Phone</th>
                                         <th class="py-3 px-4 text-center">Actions</th>
                                     </tr>
@@ -705,8 +724,8 @@
                                 <input type="text" id="admin-create-userid" required placeholder="e.g. DIC102" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-purple-500">
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Set Password <span class="text-rose-500">*</span></label>
-                                <input type="password" id="admin-create-password" required placeholder="••••••••" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-purple-500">
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Admin Login Email <span class="text-rose-500">*</span></label>
+                                <input type="email" id="admin-create-email" required placeholder="admin@example.com" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-purple-500">
                             </div>
                             <button type="submit" class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs rounded-xl shadow transition">
                                 Add DIC Admin Account
@@ -847,16 +866,16 @@
                     <input type="text" id="edit-dm-userid" required autocomplete="off" class="w-full border border-slate-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-sky-500">
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">New Password <span class="text-slate-400">(leave blank to keep current)</span></label>
-                    <div class="relative">
-                        <input type="password" id="edit-dm-password" minlength="4" autocomplete="new-password" class="w-full border border-slate-300 rounded-lg p-2.5 pr-10 outline-none focus:ring-2 focus:ring-sky-500">
-                        <button type="button" onclick="toggleDmPasswordVisibility()" class="absolute right-2 top-2.5 text-slate-400 hover:text-slate-700" title="Show/Hide Password">
-                            <i data-lucide="eye" class="w-4 h-4"></i>
-                        </button>
-                    </div>
+                    <label class="block font-semibold text-slate-700 mb-1">Login Email <span class="text-rose-500">*</span></label>
+                    <input type="email" id="edit-dm-email" required class="w-full border border-slate-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-sky-500">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div><label class="block font-semibold text-slate-700 mb-1">Zone</label><select id="edit-dm-zone" class="w-full border border-slate-300 rounded-lg p-2"><option value="">Select Zone</option></select></div>
+                    <div><label class="block font-semibold text-slate-700 mb-1">Team</label><select id="edit-dm-team" class="w-full border border-slate-300 rounded-lg p-2"><option value="">Select Team</option></select></div>
+                    <div><label class="block font-semibold text-slate-700 mb-1">Area</label><select id="edit-dm-area" class="w-full border border-slate-300 rounded-lg p-2"><option value="">Select Area</option></select></div>
                 </div>
                 <div class="bg-sky-50 border border-sky-200 text-sky-800 rounded-lg p-3 text-[11px]">
-                    DIC Admin and Super Admin can edit the Delivery Man's name, phone, login ID and password.
+                    Passwords are managed securely by Firebase Authentication and are never stored in this application database. Legacy accounts can be activated by adding an email address.
                 </div>
                 <div class="flex justify-end gap-2 pt-2 border-t">
                     <button type="button" onclick="closeModal('edit-dm-credentials-modal')" class="px-4 py-2 border rounded-xl text-slate-600">Cancel</button>
@@ -906,6 +925,12 @@
                     <label class="block font-semibold text-slate-700 mb-1">Phone Number</label>
                     <input type="text" id="edit-mio-phone" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-sky-500">
                 </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div><label class="block font-semibold text-slate-700 mb-1">Zone</label><input type="text" id="edit-mio-zone" list="edl-zone-options" placeholder="e.g. Kushtia Zone" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-sky-500"></div>
+                    <div><label class="block font-semibold text-slate-700 mb-1">Team</label><input type="text" id="edit-mio-team" list="edl-team-options" placeholder="e.g. Team A" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-sky-500"></div>
+                    <div><label class="block font-semibold text-slate-700 mb-1">Area</label><input type="text" id="edit-mio-area" list="edl-area-options" placeholder="e.g. Kushtia Sadar" class="w-full border rounded-lg p-2 outline-none focus:ring-2 focus:ring-sky-500"></div>
+                </div>
+                <datalist id="edl-zone-options"></datalist><datalist id="edl-team-options"></datalist><datalist id="edl-area-options"></datalist>
                 <div class="flex justify-end gap-2 pt-2 border-t">
                     <button type="button" onclick="closeModal('edit-mio-modal')" class="px-4 py-2 border rounded-xl text-slate-600">Cancel</button>
                     <button type="submit" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-xl shadow">Save Changes</button>
@@ -934,7 +959,6 @@
                 id: 'usr-super',
                 name: 'Md. Shahriar Hossen Rumon',
                 userId: 'E1002401',
-                password: 'admin@rumon123*',
                 role: 'super_admin',
                 phone: '01700000000'
             },
@@ -942,7 +966,6 @@
                 id: 'usr-admin-1',
                 name: 'DIC Manager Tanvir',
                 userId: 'DIC101',
-                password: 'dic123',
                 role: 'admin',
                 phone: '01800000000'
             },
@@ -950,7 +973,6 @@
                 id: 'dm-1',
                 name: "Songram Parvez",
                 userId: 'DM-01',
-                password: "DM@2026#01",
                 role: 'delivery_man',
                 phone: "01700000001",
                 assignedMioIds: ["mio-103", "mio-113", "mio-102", "mio-114"]
@@ -959,7 +981,6 @@
                 id: 'dm-2',
                 name: "Abu Bashar Mithun",
                 userId: 'DM-02',
-                password: "DM@2026#02",
                 role: 'delivery_man',
                 phone: "01700000002",
                 assignedMioIds: ["mio-103", "mio-113", "mio-102", "mio-114"]
@@ -968,7 +989,6 @@
                 id: 'dm-3',
                 name: "Emon Biswas",
                 userId: 'DM-03',
-                password: "DM@2026#03",
                 role: 'delivery_man',
                 phone: "01700000003",
                 assignedMioIds: ["mio-103", "mio-113", "mio-102", "mio-114"]
@@ -977,7 +997,6 @@
                 id: 'dm-4',
                 name: "Abdul Wadud",
                 userId: 'DM-04',
-                password: "DM@2026#04",
                 role: 'delivery_man',
                 phone: "01700000004",
                 assignedMioIds: ["mio-126", "mio-128"]
@@ -986,7 +1005,6 @@
                 id: 'dm-5',
                 name: "Masud Rana",
                 userId: 'DM-05',
-                password: "DM@2026#05",
                 role: 'delivery_man',
                 phone: "01700000005",
                 assignedMioIds: ["mio-106", "mio-107", "mio-108", "mio-109"]
@@ -995,7 +1013,6 @@
                 id: 'dm-6',
                 name: "Zahid Hossen",
                 userId: 'DM-06',
-                password: "DM@2026#06",
                 role: 'delivery_man',
                 phone: "01700000006",
                 assignedMioIds: ["mio-129", "mio-130", "mio-131", "mio-132", "mio-133", "mio-134"]
@@ -1004,7 +1021,6 @@
                 id: 'dm-7',
                 name: "Arafat Hossen",
                 userId: 'DM-07',
-                password: "DM@2026#07",
                 role: 'delivery_man',
                 phone: "01700000007",
                 assignedMioIds: ["mio-116", "mio-118", "mio-119"]
@@ -1013,7 +1029,6 @@
                 id: 'dm-8',
                 name: "Robiul Islam Ridoy",
                 userId: 'DM-08',
-                password: "DM@2026#08",
                 role: 'delivery_man',
                 phone: "01700000008",
                 assignedMioIds: ["mio-120", "mio-121", "mio-123", "mio-124", "mio-122"]
@@ -1022,7 +1037,6 @@
                 id: 'dm-9',
                 name: "Jamirul Islam",
                 userId: 'DM-09',
-                password: "DM@2026#09",
                 role: 'delivery_man',
                 phone: "01700000009",
                 assignedMioIds: ["mio-135", "mio-136", "mio-137", "mio-138", "mio-139", "mio-140"]
@@ -1031,7 +1045,6 @@
                 id: 'dm-10',
                 name: "Abu Bashar Ridoy",
                 userId: 'DM-10',
-                password: "DM@2026#10",
                 role: 'delivery_man',
                 phone: "01700000010",
                 assignedMioIds: ["mio-103", "mio-113", "mio-102", "mio-114"]
@@ -1040,7 +1053,6 @@
                 id: 'dm-11',
                 name: "Md. Afikur Zaman",
                 userId: 'DM-11',
-                password: "DM@2026#11",
                 role: 'delivery_man',
                 phone: "01700000011",
                 assignedMioIds: ["mio-103", "mio-113", "mio-102", "mio-114"]
@@ -1139,6 +1151,7 @@
             document.getElementById('current-date-badge').innerText = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
             
             renderLogo();
+            refreshOrgSelectors();
 
             const activeUserId = localStorage.getItem(STORAGE_KEYS.SESSION_USER_ID);
             if (activeUserId) {
@@ -1677,15 +1690,40 @@
             }
         }
 
+        // --- ORGANISATIONAL ZONE / TEAM / AREA HELPERS ---
+        function uniqueMioValues(field) {
+            return [...new Set(state.mios.map(m => (m[field] || '').trim()).filter(Boolean))].sort((a,b) => a.localeCompare(b));
+        }
+        function fillSelectOptions(id, values, placeholder, selected='') {
+            const el = document.getElementById(id); if (!el) return;
+            el.innerHTML = `<option value="">${placeholder}</option>` + values.map(v => `<option value="${String(v).replace(/\"/g,'&quot;')}" ${v===selected?'selected':''}>${v}</option>`).join('');
+        }
+        function refreshOrgSelectors() {
+            const keep = id => document.getElementById(id)?.value || '';
+            const zones=uniqueMioValues('zone'), teams=uniqueMioValues('team'), areas=uniqueMioValues('area');
+            ['dm-create-zone','edit-dm-zone'].forEach(id=>fillSelectOptions(id,zones,'Select Zone'));
+            ['dm-create-team','edit-dm-team'].forEach(id=>fillSelectOptions(id,teams,'Select Team'));
+            ['dm-create-area','edit-dm-area'].forEach(id=>fillSelectOptions(id,areas,'Select Area'));
+            fillSelectOptions('dm-zone-filter',zones,'All Zones'); fillSelectOptions('dm-team-filter',teams,'All Teams'); fillSelectOptions('dm-area-filter',areas,'All Areas');
+            fillSelectOptions('assign-mio-zone-filter',zones,'Assignment: All Zones',keep('assign-mio-zone-filter')); fillSelectOptions('assign-mio-team-filter',teams,'Assignment: All Teams',keep('assign-mio-team-filter')); fillSelectOptions('assign-mio-area-filter',areas,'Assignment: All Areas',keep('assign-mio-area-filter'));
+            ['zone','team','area'].forEach(field=>{ const dl=document.getElementById(`edl-${field}-options`); if(dl) dl.innerHTML=uniqueMioValues(field).map(v=>`<option value="${v.replace(/\"/g,'&quot;')}">`).join(''); });
+        }
+
         // --- DELIVERY MEN SETUP & MIO/TO REASSIGNMENT ---
         function renderDeliveryMenManagement() {
+            refreshOrgSelectors();
             const container = document.getElementById('delivery-men-card-list');
             const filterInput = document.getElementById('dm-name-filter');
             const searchTerm = filterInput ? filterInput.value.trim().toLowerCase() : '';
+            const zone = document.getElementById('dm-zone-filter')?.value || '';
+            const team = document.getElementById('dm-team-filter')?.value || '';
+            const area = document.getElementById('dm-area-filter')?.value || '';
             const allDms = state.users.filter(u => u.role === 'delivery_man');
-            const dms = searchTerm
-                ? allDms.filter(u => (u.name || '').toLowerCase().includes(searchTerm))
-                : allDms;
+            const dms = allDms.filter(u => (!searchTerm || (u.name || '').toLowerCase().includes(searchTerm) || (u.userId || '').toLowerCase().includes(searchTerm)) && (!zone || u.zone===zone) && (!team || u.team===team) && (!area || u.area===area));
+            const assignZone=document.getElementById('assign-mio-zone-filter')?.value||'';
+            const assignTeam=document.getElementById('assign-mio-team-filter')?.value||'';
+            const assignArea=document.getElementById('assign-mio-area-filter')?.value||'';
+            const assignableMios=state.mios.filter(m=>(!assignZone||m.zone===assignZone)&&(!assignTeam||m.team===assignTeam)&&(!assignArea||m.area===assignArea));
 
             const countEl = document.getElementById('dm-filter-result-count');
             if (countEl) {
@@ -1716,8 +1754,12 @@
                                 <h4 class="font-bold text-slate-800 text-sm">${dm.name}</h4>
                                 <div class="flex items-center space-x-2 text-xs text-slate-500 mt-0.5">
                                     <span class="bg-sky-100 text-sky-800 px-2 py-0.5 rounded font-mono font-bold">User ID: ${dm.userId}</span>
-                                    <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded font-mono">Password: ••••••••</span>
                                     <span>Phone: ${dm.phone || 'N/A'}</span>
+                                </div>
+                                <div class="flex flex-wrap gap-1.5 mt-2 text-[10px]">
+                                    <span class="px-2 py-1 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-100">Zone: ${dm.zone || 'Not assigned'}</span>
+                                    <span class="px-2 py-1 rounded-md bg-violet-50 text-violet-700 border border-violet-100">Team: ${dm.team || 'Not assigned'}</span>
+                                    <span class="px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-100">Area: ${dm.area || 'Not assigned'}</span>
                                 </div>
                             </div>
                             <div class="text-right flex flex-col items-end gap-2">
@@ -1733,7 +1775,7 @@
                                 <p class="text-[11px] font-bold uppercase text-slate-700">Assign MIO & TO Territories (DIC & Super Admin Authorized):</p>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                                ${state.mios.map(mio => {
+                                ${assignableMios.map(mio => {
                                     const isAssigned = (dm.assignedMioIds || []).includes(mio.id);
                                     const isTO = mio.position.toLowerCase().includes('territory officer') || mio.code.startsWith('TO');
                                     return `
@@ -1757,6 +1799,7 @@
         function clearDeliveryPersonnelFilter() {
             const input = document.getElementById('dm-name-filter');
             if (input) input.value = '';
+            ['dm-zone-filter','dm-team-filter','dm-area-filter'].forEach(id=>{const el=document.getElementById(id); if(el) el.value='';});
             renderDeliveryMenManagement();
             if (input) input.focus();
         }
@@ -1771,6 +1814,9 @@
             const phone = document.getElementById('dm-create-phone').value.trim();
             const userId = document.getElementById('dm-create-userid').value.trim();
             const password = document.getElementById('dm-create-password').value.trim();
+            const zone = document.getElementById('dm-create-zone').value;
+            const team = document.getElementById('dm-create-team').value;
+            const area = document.getElementById('dm-create-area').value;
 
             if (state.users.some(u => u.userId.toLowerCase() === userId.toLowerCase())) {
                 showToast("User ID already exists!", "error");
@@ -1784,6 +1830,7 @@
                 userId: userId,
                 password: password,
                 role: 'delivery_man',
+                zone, team, area,
                 assignedMioIds: []
             };
 
@@ -1794,6 +1841,9 @@
             document.getElementById('dm-create-phone').value = '';
             document.getElementById('dm-create-userid').value = '';
             document.getElementById('dm-create-password').value = '';
+            document.getElementById('dm-create-zone').value = '';
+            document.getElementById('dm-create-team').value = '';
+            document.getElementById('dm-create-area').value = '';
 
             renderDeliveryMenManagement();
             showToast(`Delivery account created for ${name} (ID: ${userId})`, "success");
@@ -1835,6 +1885,10 @@
             document.getElementById('edit-dm-name').value = dm.name || '';
             document.getElementById('edit-dm-phone').value = dm.phone || '';
             document.getElementById('edit-dm-userid').value = dm.userId || '';
+            refreshOrgSelectors();
+            document.getElementById('edit-dm-zone').value = dm.zone || '';
+            document.getElementById('edit-dm-team').value = dm.team || '';
+            document.getElementById('edit-dm-area').value = dm.area || '';
             document.getElementById('edit-dm-password').value = '';
             document.getElementById('edit-dm-password').type = 'password';
             document.getElementById('edit-dm-credentials-modal').classList.remove('hidden');
@@ -1857,6 +1911,9 @@
             const newPhone = document.getElementById('edit-dm-phone').value.trim();
             const newUserId = document.getElementById('edit-dm-userid').value.trim();
             const newPassword = document.getElementById('edit-dm-password').value.trim();
+            const newZone = document.getElementById('edit-dm-zone').value;
+            const newTeam = document.getElementById('edit-dm-team').value;
+            const newArea = document.getElementById('edit-dm-area').value;
             const dm = state.users.find(u => u.id === dmId && u.role === 'delivery_man');
             if (!dm || !newName || !newPhone || !newUserId) return;
 
@@ -1869,6 +1926,7 @@
             dm.name = newName;
             dm.phone = newPhone;
             dm.userId = newUserId;
+            dm.zone = newZone; dm.team = newTeam; dm.area = newArea;
             if (newPassword) dm.password = newPassword;
             saveState();
             closeModal('edit-dm-credentials-modal');
@@ -1897,6 +1955,9 @@
                             </span>
                         </td>
                         <td class="py-3 px-4 text-slate-700 font-medium">${m.territory}</td>
+                        <td class="py-3 px-4">${m.zone || '<span class="text-slate-300">Not set</span>'}</td>
+                        <td class="py-3 px-4">${m.team || '<span class="text-slate-300">Not set</span>'}</td>
+                        <td class="py-3 px-4">${m.area || m.territory || '<span class="text-slate-300">Not set</span>'}</td>
                         <td class="py-3 px-4 text-slate-500">${m.phone || 'N/A'}</td>
                         <td class="py-3 px-4 text-center">
                             <div class="flex items-center justify-center gap-2">
@@ -1922,6 +1983,9 @@
             document.getElementById('edit-mio-position').value = mio.position || 'MIO';
             document.getElementById('edit-mio-territory').value = mio.territory || '';
             document.getElementById('edit-mio-phone').value = mio.phone || '';
+            document.getElementById('edit-mio-zone').value = mio.zone || '';
+            document.getElementById('edit-mio-team').value = mio.team || '';
+            document.getElementById('edit-mio-area').value = mio.area || mio.territory || '';
             document.getElementById('edit-mio-modal').classList.remove('hidden');
             if (window.lucide) lucide.createIcons();
         }
@@ -1941,6 +2005,9 @@
             const position = document.getElementById('edit-mio-position').value;
             const territory = document.getElementById('edit-mio-territory').value.trim();
             const phone = document.getElementById('edit-mio-phone').value.trim();
+            const zone = document.getElementById('edit-mio-zone').value.trim();
+            const team = document.getElementById('edit-mio-team').value.trim();
+            const area = document.getElementById('edit-mio-area').value.trim();
 
             const duplicate = state.mios.find(m => m.id !== mioId && m.code && m.code.toLowerCase() === code.toLowerCase());
             if (duplicate) {
@@ -1953,6 +2020,7 @@
             mio.position = position;
             mio.territory = territory;
             mio.phone = phone;
+            mio.zone = zone; mio.team = team; mio.area = area;
             saveState();
             closeModal('edit-mio-modal');
             renderMioMasterTable();
@@ -2219,5 +2287,137 @@
             }, 3000);
         }
     </script>
+<script type="module">
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs, onSnapshot, serverTimestamp, writeBatch, query, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA69xPY-VihT15404OGEbK7qj48kdr-Hs",
+  authDomain: "edl-sales-management.firebaseapp.com",
+  projectId: "edl-sales-management",
+  storageBucket: "edl-sales-management.firebasestorage.app",
+  messagingSenderId: "150544559929",
+  appId: "1:150544559929:web:edbeed5e1535704b9d02e8",
+  measurementId: "G-L3VBG4J6JB"
+};
+const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+const auth = getAuth(app), db = getFirestore(app);
+const accountApp = initializeApp(firebaseConfig, "EDLAccountProvisioner"), accountAuth = getAuth(accountApp);
+let cloudReady=false, cloudBusy=false, unsubs=[], lastIds={users:new Set(),mios:new Set(),reports:new Set()};
+const clean = obj => { const x={...obj}; delete x.password; delete x.firebaseDocId; delete x.authEmail; return x; };
+const norm = s => String(s||"").trim().toLowerCase();
+const friendly = e => ({"auth/invalid-credential":"Invalid User ID or password.","auth/too-many-requests":"Too many attempts. Try again later.","auth/email-already-in-use":"This email is already registered.","auth/weak-password":"Firebase rejected the generated password. Try again.","permission-denied":"Firestore permission denied. Apply the supplied Security Rules."}[e.code] || e.message || "Unexpected Firebase error.");
+function loginError(msg){const el=document.getElementById('login-error');el.classList.remove('hidden');document.getElementById('login-error-msg').innerText=msg;}
+function stopCloudListeners(){unsubs.forEach(fn=>fn());unsubs=[];}
+async function readRows(name, ownOnly=false){
+  let snap;
+  if(name==='reports' && ownOnly) snap=await getDocs(query(collection(db,name),where('deliveryManId','==',state.currentUser.id)));
+  else if(name==='users' && ownOnly) snap=await getDoc(doc(db,'users',auth.currentUser.uid));
+  else snap=await getDocs(collection(db,name));
+  if(name==='users' && ownOnly) return snap.exists()?[{...snap.data(),uid:auth.currentUser.uid,firebaseDocId:auth.currentUser.uid}]:[];
+  return snap.docs.map(d=>({...d.data(),firebaseDocId:d.id}));
+}
+async function loadCloudState(){
+  const own=state.currentUser.role==='delivery_man';
+  const [users,mios,reports]=await Promise.all([readRows('users',own),readRows('mios'),readRows('reports',own)]);
+  state.users=users;state.mios=mios;state.reports=reports;
+  const brand=await getDoc(doc(db,'settings','branding'));state.customLogo=brand.exists()?brand.data().customLogo||null:null;
+  for(const n of ['users','mios','reports'])lastIds[n]=new Set(state[n].map(x=>x.firebaseDocId||x.id));
+}
+async function migrateLegacyData(legacySnapshot){
+  if(state.currentUser.role!=='super_admin')return;
+  const marker=await getDoc(doc(db,'system','legacyMigrationV1'));if(marker.exists())return;
+  const [mios,reports]=await Promise.all([getDocs(collection(db,'mios')),getDocs(collection(db,'reports'))]);
+  const batch=writeBatch(db);let n=0;
+  if(mios.empty)for(const m of legacySnapshot.mios){batch.set(doc(db,'mios',String(m.id)),clean(m));n++;}
+  if(reports.empty)for(const r of legacySnapshot.reports){batch.set(doc(db,'reports',String(r.id)),clean(r));n++;}
+  // Preserve old user directory entries without migrating or retaining any old plaintext passwords.
+  for(const u of legacySnapshot.users){if(u.id===state.currentUser.id||u.uid)continue;const id='legacy_'+String(u.id).replace(/[^a-zA-Z0-9_-]/g,'_');const ref=doc(db,'users',id);const existing=await getDoc(ref);if(!existing.exists()){batch.set(ref,{...clean(u),legacyPending:true,active:false});n++;}}
+  batch.set(doc(db,'system','legacyMigrationV1'),{completedAt:serverTimestamp(),migratedDocuments:n,source:'localStorage migration'});await batch.commit();
+  await loadCloudState();showToast('Legacy MIO, report and user directory records migrated. Old accounts need activation.','success');
+}
+function subscribeCloud(){
+  stopCloudListeners();const own=state.currentUser.role==='delivery_man';
+  if(own){
+    unsubs.push(onSnapshot(doc(db,'users',auth.currentUser.uid),s=>{if(s.exists()){state.currentUser={...s.data(),uid:auth.currentUser.uid,firebaseDocId:auth.currentUser.uid};state.users=[state.currentUser];refreshCloudUI();}}));
+    unsubs.push(onSnapshot(query(collection(db,'reports'),where('deliveryManId','==',state.currentUser.id)),s=>{state.reports=s.docs.map(d=>({...d.data(),firebaseDocId:d.id}));lastIds.reports=new Set(state.reports.map(x=>x.firebaseDocId));refreshCloudUI();}));
+    unsubs.push(onSnapshot(collection(db,'mios'),s=>{state.mios=s.docs.map(d=>({...d.data(),firebaseDocId:d.id}));lastIds.mios=new Set(state.mios.map(x=>x.firebaseDocId));refreshCloudUI();}));
+  } else {
+    for(const name of ['users','mios','reports'])unsubs.push(onSnapshot(collection(db,name),s=>{state[name]=s.docs.map(d=>({...d.data(),firebaseDocId:d.id}));lastIds[name]=new Set(state[name].map(x=>x.firebaseDocId));refreshCloudUI();},e=>console.error(e)));
+  }
+  unsubs.push(onSnapshot(doc(db,'settings','branding'),s=>{state.customLogo=s.exists()?s.data().customLogo||null:null;renderLogo();}));
+}
+function refreshCloudUI(){if(!state.currentUser)return;try{refreshOrgSelectors();renderLogo();if(state.activeView==='admin'){renderAdminDashboard();renderAdminReportsTable();renderDeliveryMenManagement();renderMioMasterTable();renderAdminManagementTable();}else{populateFormMioDropdown();renderDeliveryStats();renderDmHistoryTable();}if(window.lucide)lucide.createIcons();}catch(e){console.warn('Cloud UI refresh',e);}}
+async function persistRows(name,rows){
+  const batch=writeBatch(db),ids=new Set();let writes=0;
+  for(const row of rows){
+    if(name==='users' && state.currentUser.role==='admin' && row.role!=='delivery_man')continue;
+    if(name==='reports' && state.currentUser.role==='delivery_man' && row.deliveryManId!==state.currentUser.id)continue;
+    if(name==='users' && state.currentUser.role==='delivery_man')continue;
+    if(name==='mios' && state.currentUser.role==='delivery_man')continue;
+    const id=String(row.firebaseDocId||(name==='users'&&row.uid?row.uid:row.id));if(!id||id==='undefined')continue;
+    ids.add(id);batch.set(doc(db,name,id),{...clean(row),updatedAt:serverTimestamp()},{merge:true});writes++;
+  }
+  const canDelete=state.currentUser.role==='super_admin'||(name==='reports'&&state.currentUser.role==='admin');
+  if(canDelete)for(const id of lastIds[name])if(!ids.has(id)){batch.delete(doc(db,name,id));writes++;}
+  if(writes)await batch.commit();if(name!=='users'||state.currentUser.role==='super_admin')lastIds[name]=ids;
+}
+window.saveState=async function(){
+  if(!cloudReady||!state.currentUser)return;
+  if(cloudBusy)return;cloudBusy=true;
+  try{await Promise.all([persistRows('users',state.users),persistRows('mios',state.mios),persistRows('reports',state.reports)]);
+    if(state.currentUser.role==='super_admin')await setDoc(doc(db,'settings','branding'),{customLogo:state.customLogo||null,updatedAt:serverTimestamp()},{merge:true});
+  }catch(e){showToast('Cloud save failed: '+friendly(e),'error');console.error(e);}finally{cloudBusy=false;}
+};
+async function loginDirectory(userId){const s=await getDoc(doc(db,'loginDirectory',norm(userId)));if(!s.exists())throw new Error('User ID is not activated. Contact Super Admin.');return s.data();}
+window.handleLogin=async function(e){
+  e.preventDefault();const id=document.getElementById('login-userid').value.trim(),pw=document.getElementById('login-password').value,btn=e.submitter;
+  if(btn){btn.disabled=true;btn.dataset.original=btn.innerHTML;btn.innerHTML='Connecting…';}
+  try{const legacySnapshot={users:[...state.users],mios:[...state.mios],reports:[...state.reports]};const entry=await loginDirectory(id);if(entry.active===false)throw new Error('This account is inactive. Contact Super Admin.');
+    const cred=await signInWithEmailAndPassword(auth,entry.authEmail,pw),profile=await getDoc(doc(db,'users',cred.user.uid));if(!profile.exists())throw new Error('Firebase user profile not found.');
+    const u={...profile.data(),uid:cred.user.uid,firebaseDocId:cred.user.uid};if(u.active===false)throw new Error('This account is inactive.');
+    state.currentUser=u;await loadCloudState();state.currentUser=state.users.find(x=>x.uid===cred.user.uid)||u;cloudReady=true;subscribeCloud();await migrateLegacyData(legacySnapshot);
+    document.getElementById('login-error').classList.add('hidden');document.getElementById('login-userid').value='';document.getElementById('login-password').value='';document.getElementById('view-login').classList.add('hidden');initializeUserSession();showToast('Welcome, '+u.name,'success');
+  }catch(err){try{if(auth.currentUser)await signOut(auth);}catch(_){}loginError(friendly(err));}
+  finally{if(btn){btn.disabled=false;btn.innerHTML=btn.dataset.original||'Sign In';}}
+};
+window.handleLogout=async function(){stopCloudListeners();cloudReady=false;state.currentUser=null;try{await signOut(auth);}catch(e){console.warn(e);}showLoginScreen();};
+async function provision(email){
+  const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';const temp=Array.from(crypto.getRandomValues(new Uint8Array(32)),b=>alphabet.charAt(b%alphabet.length)).join('')+'Aa1!';
+  const c=await createUserWithEmailAndPassword(accountAuth,email,temp);await signOut(accountAuth);return {uid:c.user.uid,authEmail:email};
+}
+async function createAccount(p){
+  if(!['super_admin','admin'].includes(state.currentUser.role))throw new Error('Not authorized.');if(state.users.some(x=>norm(x.userId)===norm(p.userId)))throw new Error('User ID already exists.');
+  const id=await provision(p.email),u={...p,...id,active:true,createdAt:new Date().toISOString()};delete u.email;
+  await setDoc(doc(db,'users',id.uid),clean(u));await setDoc(doc(db,'loginDirectory',norm(p.userId)),{authEmail:p.email,uid:id.uid,active:true,userId:p.userId});state.users.push({...u,firebaseDocId:id.uid});
+  try{await sendPasswordResetEmail(auth,p.email);showToast('Account created. Password setup email sent.','success');}catch(mailError){showToast('Account created, but reset email could not be sent. Check Authorized Domains and use Firebase password reset. '+friendly(mailError),'error');}
+}
+window.handleCreateDeliveryMan=async function(e){e.preventDefault();try{
+  if(!['super_admin','admin'].includes(state.currentUser?.role))throw new Error('Unauthorized.');
+  const name=document.getElementById('dm-create-name').value.trim(),phone=document.getElementById('dm-create-phone').value.trim(),userId=document.getElementById('dm-create-userid').value.trim(),email=document.getElementById('dm-create-email').value.trim();
+  const zone=document.getElementById('dm-create-zone').value,team=document.getElementById('dm-create-team').value,area=document.getElementById('dm-create-area').value;
+  await createAccount({id:'dm-'+crypto.randomUUID(),name,phone,userId,role:'delivery_man',zone,team,area,assignedMioIds:[]});
+  ['dm-create-name','dm-create-phone','dm-create-userid','dm-create-email','dm-create-zone','dm-create-team','dm-create-area'].forEach(x=>document.getElementById(x).value='');renderDeliveryMenManagement();
+}catch(err){showToast(friendly(err),'error');}};
+window.handleCreateAdmin=async function(e){e.preventDefault();try{
+  if(state.currentUser?.role!=='super_admin')throw new Error('Only Super Admin can add DIC Admins.');
+  const name=document.getElementById('admin-create-name').value.trim(),userId=document.getElementById('admin-create-userid').value.trim(),email=document.getElementById('admin-create-email').value.trim();
+  await createAccount({id:'admin-'+crypto.randomUUID(),name,userId,role:'admin'});['admin-create-name','admin-create-userid','admin-create-email'].forEach(x=>document.getElementById(x).value='');renderAdminManagementTable();
+}catch(err){showToast(friendly(err),'error');}};
+window.openDmCredentialEditor=async function(id){const dm=state.users.find(u=>u.id===id&&u.role==='delivery_man');if(!dm)return;document.getElementById('edit-dm-id').value=dm.id;document.getElementById('edit-dm-name-label').innerText='Editing '+dm.name;document.getElementById('edit-dm-name').value=dm.name||'';document.getElementById('edit-dm-phone').value=dm.phone||'';document.getElementById('edit-dm-userid').value=dm.userId||'';let email='';if(dm.uid){const x=await getDoc(doc(db,'loginDirectory',norm(dm.userId)));if(x.exists())email=x.data().authEmail||'';}document.getElementById('edit-dm-email').value=email;refreshOrgSelectors();document.getElementById('edit-dm-zone').value=dm.zone||'';document.getElementById('edit-dm-team').value=dm.team||'';document.getElementById('edit-dm-area').value=dm.area||'';document.getElementById('edit-dm-credentials-modal').classList.remove('hidden');};
+window.handleSaveDmCredentials=async function(e){e.preventDefault();try{
+  if(!['super_admin','admin'].includes(state.currentUser?.role))throw new Error('Unauthorized.');const id=document.getElementById('edit-dm-id').value,dm=state.users.find(x=>x.id===id);if(!dm)throw new Error('Delivery account not found.');
+  const name=document.getElementById('edit-dm-name').value.trim(),phone=document.getElementById('edit-dm-phone').value.trim(),userId=document.getElementById('edit-dm-userid').value.trim(),email=document.getElementById('edit-dm-email').value.trim();
+  if(!name||!phone||!userId||!email)throw new Error('Complete all required fields.');if(state.users.some(x=>x.id!==id&&norm(x.userId)===norm(userId)))throw new Error('Duplicate User ID.');
+  if(!dm.uid){const p=await provision(email);dm.uid=p.uid;dm.firebaseDocId=p.uid;dm.active=true;dm.authEmail=p.authEmail;}
+  else {const existing=await getDoc(doc(db,'loginDirectory',norm(dm.userId)));const currentEmail=existing.exists()?existing.data().authEmail:'';if(currentEmail!==email)throw new Error('Login email cannot be changed after activation.');dm.authEmail=currentEmail;}
+  const old=norm(dm.userId);Object.assign(dm,{name,phone,userId,zone:document.getElementById('edit-dm-zone').value,team:document.getElementById('edit-dm-team').value,area:document.getElementById('edit-dm-area').value,legacyPending:false});
+  if(old&&old!==norm(userId))await deleteDoc(doc(db,'loginDirectory',old));await setDoc(doc(db,'loginDirectory',norm(userId)),{authEmail:dm.authEmail,uid:dm.uid,active:true,userId});await setDoc(doc(db,'users',dm.uid),clean(dm),{merge:true});if(newlyProvisioned){try{await sendPasswordResetEmail(auth,email);}catch(mailError){showToast('Profile activated, but password email failed: '+friendly(mailError),'error');}}await saveState();closeModal('edit-dm-credentials-modal');renderDeliveryMenManagement();showToast('Delivery profile saved.','success');
+}catch(err){showToast(friendly(err),'error');}};
+window.deleteAdminAccount=async function(id){if(state.currentUser?.role!=='super_admin')return;const u=state.users.find(x=>x.id===id);if(!u||u.role==='super_admin')return;if(!confirm('Deactivate this account?'))return;u.active=false;if(u.uid)await setDoc(doc(db,'users',u.uid),clean(u),{merge:true});if(u.userId)await setDoc(doc(db,'loginDirectory',norm(u.userId)),{active:false},{merge:true});state.users=state.users.filter(x=>x.id!==id);await saveState();renderAdminManagementTable();showToast('Account deactivated.','success');};
+window.onload=function(){document.getElementById('current-date-badge').innerText=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});state.currentUser=null;renderLogo();refreshOrgSelectors();showLoginScreen();const b=document.createElement('div');b.className='fixed bottom-5 left-5 z-40 bg-white border border-slate-200 shadow-lg rounded-xl px-4 py-3 text-xs text-slate-600';b.innerHTML='<strong class="text-emerald-700">Firebase Cloud</strong> · Secure sign-in enabled';document.body.appendChild(b);if(window.lucide)lucide.createIcons();};
+console.info('EDL Firebase Cloud integration loaded.');
+</script>
 </body>
 </html>
